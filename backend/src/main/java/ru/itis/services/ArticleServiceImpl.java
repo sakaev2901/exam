@@ -8,6 +8,8 @@ import ru.itis.dto.ArticleDto;
 import ru.itis.models.Article;
 import ru.itis.repositories.ArticleRepository;
 
+import java.util.Date;
+
 @Component
 public class ArticleServiceImpl implements ArticleService{
 
@@ -17,7 +19,7 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public void addArticle(ArticleDto articleDto) {
         String text = articleDto.getText();
-        String slug = generateSlug();
+        String slug = generateSlug(articleDto.getText());
         Article article = Article.builder()
                 .title(articleDto.getTitle())
                 .text(text)
@@ -34,11 +36,21 @@ public class ArticleServiceImpl implements ArticleService{
         }
      }
 
-    private String generateSlug() {
-        return null;
+    private String generateSlug(String text) {
+        Date date = new Date();
+        text += date.toString();
+        Integer hash = text.hashCode();
+        String slug = "";
+        while (hash > 0) {
+            int charCode = 'a' + hash % 10;
+            slug += (char)charCode;
+            hash /= 10;
+        }
+        return slug;
     }
 
     private boolean isSlug(String slug) {
-        return false;
+        char firstChar = slug.charAt(0);
+        return firstChar >= 'a';
     }
 }
