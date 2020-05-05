@@ -19,19 +19,20 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Configuration
-@EnableWebMvc
+@Configuration // класс является конфигурации. то есть здесь мы объявляем нужные нам бины(singleton объекты) для
+// дальнейшего использования
+@EnableWebMvc // включает mvc. если по-тупому нужно для работы аннотации @Controller
 @ComponentScan("ru.itis")
-@EnableTransactionManagement
+@EnableTransactionManagement // для аннотации @Transactional(эта аннотация вешается на нужный метод чтобы закоммитить нужные данные в бд)
 public class ApplicationConfig {
-
+    // следующие два бина для фримаркера
     @Bean
     public FreeMarkerViewResolver freemarkerViewResolver() {
         FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
         resolver.setCache(true);
         resolver.setPrefix("");
         resolver.setSuffix(".ftlh");
-        resolver.setRequestContextAttribute("rc");
+        resolver.setRequestContextAttribute("rc"); // через эту переменную в файлах ftlh Обращаемся к контексту спринга
         return resolver;
     }
 
@@ -43,7 +44,7 @@ public class ApplicationConfig {
         return freeMarkerConfigurer;
     }
 
-    @Bean
+    @Bean // конфигурация api entityManager которую мы успешно используем в наших репозиториях
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setDatabase(Database.POSTGRESQL);
@@ -55,7 +56,7 @@ public class ApplicationConfig {
         return entityManagerFactoryBean;
     }
 
-    @Bean
+    @Bean // тоже бин для аннотации Transactional
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
@@ -80,7 +81,7 @@ public class ApplicationConfig {
     @Bean
     public Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update"); // можно поставить вместо update create. тогда при каждом изменении бд будут создаваться новые таблицы
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL95Dialect");
         properties.setProperty("hibernate.show_sql", "true");
         return properties;

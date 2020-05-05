@@ -25,10 +25,15 @@ public class ArticleServiceImpl implements ArticleService{
                 .text(text)
                 .slug(slug)
                 .build();
+//        articleRepository.save(article);
+//        этого тоже не было. сори
+
     }
 
     @Override
     public Article getArticle(String id) {
+        // в задании сказано что статья должна возвращаться по двум урлам. /id и /slug. Поэтому метод isSlug нужен чтобы проверить
+//        явлвяется ли часть после cлэша просто id или буквенным идентификатором
         if (isSlug(id)) {
             return articleRepository.findBySlug(id);
         } else {
@@ -38,9 +43,11 @@ public class ArticleServiceImpl implements ArticleService{
 
     private String generateSlug(String text) {
         Date date = new Date();
-        text += date.toString();
-        Integer hash = text.hashCode();
+        text += date.toString(); // к нашему тексту прибавляем дату чтобы унифицировать
+        Integer hash = text.hashCode(); // hashCode даст нам число
         String slug = "";
+        // смысл этого цикла в том чтобы вычленять по цифру из нашего хэшкода прибавлять кодировку символа 'a' и обратно
+        // кастить в char. Получится почти уникальный идентификатор. Но коллизии тоже могут быть
         while (hash > 0) {
             int charCode = 'a' + hash % 10;
             slug += (char)charCode;
@@ -50,6 +57,8 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     private boolean isSlug(String slug) {
+        // берется первый символ. Так как мы генерировали slug таким образом что он содержит только символы 'a', 'b' и тд
+//        то достаточно этой проверки
         char firstChar = slug.charAt(0);
         return firstChar >= 'a';
     }

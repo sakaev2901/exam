@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
+@Entity // говорим хибернейту что этот класс должен храниться в бд
 public class Article {
 
     @Id

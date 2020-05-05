@@ -11,13 +11,13 @@ import ru.itis.services.ArticleService;
 @Controller
 public class ArticleController {
 
-    @Autowired
+    @Autowired // сюда заинжектится(вставится) объект класса articleServiceImpl
     private ArticleService articleService;
 
-    @RequestMapping("/article/show/{slug}")
-    public ModelAndView getPage(@PathVariable("slug") String slug) {
-        ModelAndView modelAndView = new ModelAndView("article");
-        modelAndView.addObject("article", articleService.getArticle(slug));
+    @RequestMapping("/article/show/{slug}") // {} - синтаксис для выдергивания инфы прям из урла
+    public ModelAndView getPage(@PathVariable("slug") String slug ) {
+        ModelAndView modelAndView = new ModelAndView("article"); // связываем с article.ftlh
+        modelAndView.addObject("article", articleService.getArticle(slug)); // кидаем нужные данны для шаблонизатора
         return modelAndView;
     }
 }

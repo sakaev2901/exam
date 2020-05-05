@@ -5,13 +5,16 @@ import ru.itis.models.Article;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
-@Component
+@Component // для того чтобы заинжектить в нужное поле с аннотацией Autowired
 public class ArticleRepositoryJpaImpl implements ArticleRepository{
 
     @PersistenceContext
     private EntityManager entityManager;
 
+//    @Transactional
+//    здесь тоже мой косяк. без этой аннотацией у тебя данные не закоммитятся в бд
     public void save(Article article) {
         entityManager.persist(article);
     }
